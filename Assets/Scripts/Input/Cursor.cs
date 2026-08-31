@@ -1,38 +1,50 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 public class Cursor : MonoBehaviour
 {
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float maxRayDistance = 100f;
-    
-    [Inject] private readonly PlayerInputHandler _playerInputHandler;
-    private Camera _camera;
-    
+
+    [Inject] private readonly CameraSystem _camera;
+
     public Action<Vector3> OnCursorMoved;
+
+    private CancellationTokenSource _cts;
 
     private void OnEnable()
     {
-        _camera = Camera.main;
         UnityEngine.Cursor.visible = false;
-        _playerInputHandler.OnLook += Follow;
+        _cts = new CancellationTokenSource();
+        FollowAsync(_cts.Token).Forget();
     }
 
     private void OnDisable()
     {
         UnityEngine.Cursor.visible = true;
-        _playerInputHandler.OnLook -= Follow;
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
     }
 
-    private void Follow(Vector2 screenPosition)
+    private async UniTask FollowAsync(CancellationToken token)
     {
-        var ray = _camera.ScreenPointToRay(screenPosition);
-
-        if (Physics.Raycast(ray, out var hit, maxRayDistance, groundMask))
+        while (!token.IsCancellationRequested)
         {
-            transform.position = hit.point;
-            OnCursorMoved?.Invoke(hit.point);
+            var mousePosition = Mouse.current.position.ReadValue();
+            var ray = _camera.Camera.ScreenPointToRay(mousePosition);
+
+            if (Physics.Raycast(ray, out var hit, maxRayDistance, groundMask))
+            {
+                transform.position = hit.point;
+                OnCursorMoved?.Invoke(hit.point);
+            }
+
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
         }
     }
 }

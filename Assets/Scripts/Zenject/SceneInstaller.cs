@@ -18,6 +18,12 @@ public class SceneInstaller : MonoInstaller
             .NonLazy();
         
         Container
+            .Bind<CameraSystem>()
+            .FromComponentInNewPrefabResource("Camera/CameraSystem")
+            .AsSingle()
+            .NonLazy();
+        
+        Container
             .BindInterfacesAndSelfTo<PlayerInputHandler>()
             .AsSingle()
             .NonLazy();

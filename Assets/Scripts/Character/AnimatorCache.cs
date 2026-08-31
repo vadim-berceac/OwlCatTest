@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class AnimatorCache : IDisposable
@@ -7,6 +9,13 @@ public class AnimatorCache : IDisposable
     private readonly Animator _animator;
     private readonly AnimationStates _animationStates;
     private readonly Character _character;
+
+    private CancellationTokenSource _motionCts;
+    private UniTask _motionTask;
+    private Vector2 _targetMotion;
+    private Vector2 _currentMotion;
+    private float _targetSpeed;
+    private float _currentSpeed;
 
     public bool IsOnInteract  
         => _animator.GetCurrentAnimatorStateInfo(0).shortNameHash 
@@ -20,6 +29,13 @@ public class AnimatorCache : IDisposable
         _animationStates = animationStates;
         _character = character;
 
+        _currentMotion = new Vector2(
+            _animator.GetFloat(_animationStates.MotionXHash),
+            _animator.GetFloat(_animationStates.MotionYHash));
+        _targetMotion = _currentMotion;
+        _currentSpeed = _animator.GetFloat(_animationStates.MotionSpeedHash);
+        _targetSpeed = _currentSpeed;
+
         _characterInput.OnMove += OnMove;
         _characterInput.OnRun += OnRun;
         _characterInput.OnInteract += OnInteract;
@@ -32,18 +48,19 @@ public class AnimatorCache : IDisposable
         _characterInput.OnRun -= OnRun;
         _characterInput.OnInteract -= OnInteract;
         _character.OnRotationDirection -= OnTurn;
+        StopMotionSmoothing();
     }
 
     private void OnMove(Vector2 input)
     {
-        _animator.SetFloat(_animationStates.MotionXHash, input.x);
-        _animator.SetFloat(_animationStates.MotionYHash, input.y);
+        _targetMotion = input;
+        StartMotionSmoothing();
     }
 
     private void OnRun(bool run)
     {
-        var speed = run ? 1f : 0f;
-        _animator.SetFloat(_animationStates.MotionSpeedHash, speed);
+        _targetSpeed = run ? 1f : 0f;
+        StartMotionSmoothing();
     }
 
     private void OnInteract()
@@ -54,5 +71,49 @@ public class AnimatorCache : IDisposable
     private void OnTurn(float turn)
     {
         _animator.SetFloat(_animationStates.TurnHash, turn);
+    }
+
+    private void StartMotionSmoothing()
+    {
+        StopMotionSmoothing();
+        _motionCts = new CancellationTokenSource();
+        _motionTask = SmoothMotionAsync(_motionCts.Token);
+    }
+
+    private void StopMotionSmoothing()
+    {
+        _motionCts?.Cancel();
+        if (_motionTask.Status == UniTaskStatus.Pending)
+        {
+            _motionTask.Forget();
+        }
+        _motionCts?.Dispose();
+        _motionCts = null;
+    }
+
+    private async UniTask SmoothMotionAsync(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested)
+        {
+            _currentMotion = Vector2.Lerp(_currentMotion, _targetMotion, 1f - Mathf.Exp(-12f * Time.deltaTime));
+            _currentSpeed = Mathf.Lerp(_currentSpeed, _targetSpeed, 1f - Mathf.Exp(-8f * Time.deltaTime));
+
+            _animator.SetFloat(_animationStates.MotionXHash, _currentMotion.x);
+            _animator.SetFloat(_animationStates.MotionYHash, _currentMotion.y);
+            _animator.SetFloat(_animationStates.MotionSpeedHash, _currentSpeed);
+
+            if (Vector2.Distance(_currentMotion, _targetMotion) < 0.001f
+                && Mathf.Abs(_currentSpeed - _targetSpeed) < 0.001f)
+            {
+                _currentMotion = _targetMotion;
+                _currentSpeed = _targetSpeed;
+                _animator.SetFloat(_animationStates.MotionXHash, _currentMotion.x);
+                _animator.SetFloat(_animationStates.MotionYHash, _currentMotion.y);
+                _animator.SetFloat(_animationStates.MotionSpeedHash, _currentSpeed);
+                break;
+            }
+
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
+        }
     }
 }

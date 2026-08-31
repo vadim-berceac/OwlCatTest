@@ -12,6 +12,12 @@ public class SceneInstaller : MonoInstaller
             .NonLazy();
         
         Container
+            .Bind<GravityCollisionSettings>()
+            .FromScriptableObjectResource("Settings/GravityCollisionSettings")
+            .AsSingle()
+            .NonLazy();
+        
+        Container
             .Bind<Cursor>()
             .FromComponentInNewPrefabResource("Input/Cursor")
             .AsSingle()

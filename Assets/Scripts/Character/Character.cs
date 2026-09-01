@@ -62,7 +62,7 @@ public class Character : MonoBehaviour
         OnRotationDirection -= OnTurn;
     }
     
-    private void Update()
+    private void LateUpdate()
     {
         if (_graphHandle.IsValid && (IsInteracting || _graphHandle.IsBlending))
         {
@@ -111,20 +111,23 @@ public class Character : MonoBehaviour
     {
         while (!token.IsCancellationRequested)
         {
-            var previousRotation = _transform.rotation;
-            _transform.rotation = Quaternion.Slerp(_transform.rotation, _targetRotation, rotationToCursorSpeed * Time.deltaTime);
-
-            var direction = 0f;
-            if (Quaternion.Angle(previousRotation, _transform.rotation) > 0.01f)
+            if (!IsInteracting) 
             {
-                var angle = Vector3.SignedAngle(previousRotation * Vector3.forward, _transform.rotation * Vector3.forward, Vector3.up);
-                direction = angle > 0f ? -1f : 1f;
-            }
+                var previousRotation = _transform.rotation;
+                _transform.rotation = Quaternion.Slerp(_transform.rotation, _targetRotation, rotationToCursorSpeed * Time.deltaTime);
 
-            if (Mathf.Abs(direction - _lastRotationDirection) > 0.01f)
-            {
-                _lastRotationDirection = direction;
-                OnRotationDirection?.Invoke(direction);
+                var direction = 0f;
+                if (Quaternion.Angle(previousRotation, _transform.rotation) > 0.01f)
+                {
+                    var angle = Vector3.SignedAngle(previousRotation * Vector3.forward, _transform.rotation * Vector3.forward, Vector3.up);
+                    direction = angle > 0f ? -1f : 1f;
+                }
+
+                if (Mathf.Abs(direction - _lastRotationDirection) > 0.01f)
+                {
+                    _lastRotationDirection = direction;
+                    OnRotationDirection?.Invoke(direction);
+                }
             }
 
             await UniTask.Yield(PlayerLoopTiming.Update, token);

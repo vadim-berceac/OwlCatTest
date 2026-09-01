@@ -24,7 +24,6 @@ public class InteractAnimation : MonoBehaviour
    public UnityEvent<AnimationClip, float> onClipStarted;
 
    [Inject] private readonly PlayerInputHandler _input;
-   
    private Collider _currentCollider;
    private Character _currentController;
    private bool _isPlaying;
@@ -95,6 +94,7 @@ public class InteractAnimation : MonoBehaviour
       {
          return;
       }
+
       Character targetController = null;
 
       if (controller)
@@ -141,7 +141,12 @@ public class InteractAnimation : MonoBehaviour
 
    private void OnInteractExit()
    {
-      if (!_currentController || !_currentController.IsInteracting)
+      if (!_currentController)
+      {
+         return;
+      }
+      
+      if (!_currentController.IsInteracting)
       {
          return;
       }
@@ -186,7 +191,6 @@ public class InteractAnimation : MonoBehaviour
 
       if (clipsBlock.Count > 0 && !_interruptRequested)
       {
-         Debug.Log(1);
          await PlayClipsBlock(clipsBlock, hasExitClip);
       }
 

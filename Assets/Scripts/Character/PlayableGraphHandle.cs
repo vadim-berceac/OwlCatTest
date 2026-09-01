@@ -1,10 +1,10 @@
- using System;
- using System.Collections.Generic;
- using UnityEngine;
- using UnityEngine.Animations;
- using UnityEngine.Playables;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Animations;
+    using UnityEngine.Playables;
 
- public class PlayableGraphHandle : IDisposable
+    public class PlayableGraphHandle : IDisposable
     {
         private class ClipLayer
         {
@@ -25,11 +25,11 @@
 
         private AnimationLayerMixerPlayable _mixer;
         private PlayableGraph _graph;
-        private readonly Animator _animator;
         private AnimationPlayableOutput _output;
         private bool _isOutputActive;
 
         private readonly ClipLayer[] _clipSlots = new ClipLayer[ClipSlotCount];
+        private readonly Animator _animator;
         private float _controllerWeight = 1f;
 
         private ClipLayer _activeLayer;
@@ -43,7 +43,7 @@
 
         public PlayableGraphHandle(Animator animator)
         {
-            _animator = animator;
+            _animator  = animator;
             _graph = PlayableGraph.Create("AnimationGraph");
             _graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
 
@@ -55,7 +55,7 @@
             _graph.Play();
         }
 
-        public void PlayClip(AnimationClip clip, float blendLength, AvatarMask mask = null, bool isAdditive = false)
+        public void PlayClip( AnimationClip clip, float blendLength, AvatarMask mask = null, bool isAdditive = false)
         {
             if (!_graph.IsValid() || clip == null)
             {
@@ -69,6 +69,7 @@
 
             _activeLayer = layer;
             _isPlaying = true;
+
             StartBlend(slot, Mathf.Max(blendLength, 0f));
         }
 
@@ -292,12 +293,12 @@
 
                 if (layer != null)
                 {
-                    var clipWeight = hasMask ? growingWeight : 0f;  
+                    var clipWeight = hasMask ? growingWeight : 0f;
                     layer.Weight = clipWeight;
                     _mixer.SetInputWeight(growingMixerSlot, clipWeight);
                 }
 
-                _controllerWeight = Mathf.Lerp(_controllerWeight, 1f, t); 
+                _controllerWeight = Mathf.Lerp(_controllerWeight, 1f, t);
                 _mixer.SetInputWeight(ControllerSlot, _controllerWeight);
             }
 

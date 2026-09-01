@@ -148,16 +148,14 @@ MonoBehaviour:
   enterDelay: 0
   enterTime: 0.2
   exitTime: 0.3
+  interactableModel: {fileID: 0}
   controllerSource: 1
   fixedController: {fileID: 5699818905021155842}
-  controllerInteractAnimation: {fileID: 0}
-  targetSource: 2
+  targetSource: 1
   footTarget: {fileID: 0}
-  targetInteractAnimation: {fileID: 0}
-  exitTarget: {fileID: 0}
-  interactableModel: {fileID: 0}
   motionType: 0
   exitType: 1
+  exitTarget: {fileID: 0}
   onEnterMotionEnd:
     m_PersistentCalls:
       m_Calls: []
@@ -490,10 +488,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4473942347507474541, guid: c9983902dd3053847ab386be9850fce6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1294998433223536274}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1820260257338472539}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9983902dd3053847ab386be9850fce6, type: 3}
 --- !u!4 &2195672967437281467 stripped
 Transform:
@@ -505,7 +500,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1518139273377480010, guid: c9983902dd3053847ab386be9850fce6, type: 3}
   m_PrefabInstance: {fileID: 2336869243943143638}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8389871975717601980}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80c10c934306c4341ac880010dd610e3, type: 3}
@@ -516,55 +511,18 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5932638286251608622, guid: c9983902dd3053847ab386be9850fce6, type: 3}
   m_PrefabInstance: {fileID: 2336869243943143638}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8389871975717601980}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3bfd19b69d7c964c8fa028de5967b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractOnTrigger
---- !u!1 &8389871975717601980 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
-  m_PrefabInstance: {fileID: 2336869243943143638}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1820260257338472539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8389871975717601980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3429b2e38ea4fe64dbd68c44bdbe6110, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractMotion
-  trigger: {fileID: 3855003843288872348}
-  enterDelay: 0
-  enterTime: 0.2
-  exitTime: 0.2
-  controllerSource: 0
-  fixedController: {fileID: 0}
-  controllerInteractAnimation: {fileID: 0}
-  targetSource: 0
-  footTarget: {fileID: 0}
-  targetInteractAnimation: {fileID: 0}
-  exitTarget: {fileID: 0}
-  interactableModel: {fileID: 0}
-  motionType: 0
-  exitType: 0
-  onEnterMotionEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  onExitMotionStart:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &8650310147289207854 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6368697960307694840, guid: c9983902dd3053847ab386be9850fce6, type: 3}
   m_PrefabInstance: {fileID: 2336869243943143638}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8389871975717601980}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bd494d763c848743ba95157900e3644, type: 3}

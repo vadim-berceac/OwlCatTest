@@ -24,38 +24,35 @@ public class InteractMotion : MonoBehaviour
 
     private enum TargetSource
     {
-        FixedFootTarget,         
-        FromInteractAnimation,   
+        FixedFootTarget, 
         FromEventController,     
     }
 
     private enum ControllerSource
     {
         FromEvent,               
-        FixedController,         
-        FromInteractAnimation,    
+        FixedController,  
     }
 
     [SerializeField] private InteractAnimation trigger;
     [SerializeField] private float enterDelay;
     [SerializeField] private float enterTime;
     [SerializeField] private float exitTime;
+    
+    [SerializeField] private Transform ignoreCollisionsOnInteract;
 
     [Header("Who to move/rotate")]
     [SerializeField] private ControllerSource controllerSource = ControllerSource.FromEvent;
     [SerializeField] private Character fixedController;
-    [SerializeField] private InteractAnimation controllerInteractAnimation;
 
-    [Header("Target Source (mutually exclusive)")]
+    [Header("Enter Target Source")]
     [SerializeField] private TargetSource targetSource = TargetSource.FixedFootTarget;
-    [SerializeField] private Transform footTarget;
-    [SerializeField] private InteractAnimation targetInteractAnimation;
-
-    [Tooltip("Используется только при MoveToExitPosition, опционально")]
-    [SerializeField] private Transform exitTarget;
-    [SerializeField] private Transform interactableModel;
     [SerializeField] private MotionType motionType;
+    [SerializeField] private Transform footTarget;
+
+    [Header("Exit Target Source")]
     [SerializeField] private ExitType exitType;
+    [SerializeField] private Transform exitTarget;
 
     private CancellationTokenSource _cts;
     private Sequence _sequence;
@@ -74,10 +71,10 @@ public class InteractMotion : MonoBehaviour
 
     private void Awake()
     {
-        if (!interactableModel)
+        if (!ignoreCollisionsOnInteract)
             return;
 
-        _interactableColliders = interactableModel.GetComponentsInChildren<Collider>(true);
+        _interactableColliders = ignoreCollisionsOnInteract.GetComponentsInChildren<Collider>(true);
     }
 
     private void OnEnable()
@@ -135,11 +132,6 @@ public class InteractMotion : MonoBehaviour
             case ControllerSource.FixedController:
                 return fixedController;
 
-            case ControllerSource.FromInteractAnimation:
-                return controllerInteractAnimation
-                    ? controllerInteractAnimation.CurrentController
-                    : null;
-
             default:
                 return null;
         }
@@ -151,11 +143,6 @@ public class InteractMotion : MonoBehaviour
         {
             case TargetSource.FixedFootTarget:
                 return footTarget;
-
-            case TargetSource.FromInteractAnimation:
-                return targetInteractAnimation
-                    ? targetInteractAnimation.transform
-                    : null;
 
             case TargetSource.FromEventController:
                 return eventController

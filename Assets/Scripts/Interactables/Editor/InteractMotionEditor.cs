@@ -17,6 +17,8 @@ public class InteractMotionEditor : Editor
     private SerializedProperty _footTarget;
     private SerializedProperty _exitType;
     private SerializedProperty _exitTarget;
+    private SerializedProperty _onEnterMotionEnd;
+    private SerializedProperty _onExitMotionStart;
 
     private int _fixedControllerValue;
     private int _fixedFootTargetValue;
@@ -36,6 +38,8 @@ public class InteractMotionEditor : Editor
         _footTarget = serializedObject.FindProperty("footTarget");
         _exitType = serializedObject.FindProperty("exitType");
         _exitTarget = serializedObject.FindProperty("exitTarget");
+        _onEnterMotionEnd = serializedObject.FindProperty("onEnterMotionEnd");
+        _onExitMotionStart = serializedObject.FindProperty("onExitMotionStart");
 
         _fixedControllerValue = GetEnumValue(typeof(InteractMotion), "ControllerSource", "FixedController");
         _fixedFootTargetValue = GetEnumValue(typeof(InteractMotion), "TargetSource", "FixedFootTarget");
@@ -76,6 +80,10 @@ public class InteractMotionEditor : Editor
         {
             EditorGUILayout.PropertyField(_exitTarget);
         }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(_onEnterMotionEnd);
+        EditorGUILayout.PropertyField(_onExitMotionStart);
 
         serializedObject.ApplyModifiedProperties();
     }

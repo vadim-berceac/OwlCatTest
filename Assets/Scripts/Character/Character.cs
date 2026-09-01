@@ -20,6 +20,7 @@ public class Character : MonoBehaviour
     [Inject] private readonly Animator _animator;
     [Inject] private readonly AnimationStates _animationStates;
     [Inject] private readonly CameraSystem _cameraSystem;
+    [Inject] private readonly InteractableObject _interactableObject;
 
     private Quaternion _targetRotation;
     private CancellationTokenSource _rotationCts;
@@ -36,6 +37,7 @@ public class Character : MonoBehaviour
 
         _cameraSystem.SetTarget(_transform);
         _targetRotation = _transform.rotation;
+        _interactableObject.gameObject.SetActive(false);
         _cursor.OnCursorMoved += RotatePlayerToCursor;
         StartRotationLoop();
     }

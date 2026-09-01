@@ -154,6 +154,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7681599985201377335}
     m_Modifications:
+    - target: {fileID: 330873332709481578, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+      propertyPath: phrase
+      value: E - get into the elevator
+      objectReference: {fileID: 0}
     - target: {fileID: 4473942347507474541, guid: c9983902dd3053847ab386be9850fce6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -216,6 +220,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7681599985201377335}
     m_Modifications:
+    - target: {fileID: 330873332709481578, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+      propertyPath: phrase
+      value: E - get into the elevator
+      objectReference: {fileID: 0}
     - target: {fileID: 4473942347507474541, guid: c9983902dd3053847ab386be9850fce6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

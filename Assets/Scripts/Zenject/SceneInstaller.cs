@@ -30,6 +30,12 @@ public class SceneInstaller : MonoInstaller
             .NonLazy();
         
         Container
+            .Bind<DialogueCanvasController>()
+            .FromComponentInNewPrefabResource("UI/DialogueCanvas")
+            .AsSingle()
+            .NonLazy();
+        
+        Container
             .BindInterfacesAndSelfTo<PlayerInputHandler>()
             .AsSingle()
             .NonLazy();

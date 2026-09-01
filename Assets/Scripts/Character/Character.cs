@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     [SerializeField] private float minRotationDistance = 1f;
     [SerializeField] private float closeRotationDistance = 2f;
     [SerializeField] private float maxCloseRotationAngle = 45f;
+    [SerializeField] private int playerLayer = 14;
 
     [Inject] private readonly ICharacterInput _currentInput;
     [Inject] private readonly Cursor _cursor;
@@ -40,6 +41,8 @@ public class Character : MonoBehaviour
         _interactableObject.gameObject.SetActive(false);
         _cursor.OnCursorMoved += RotatePlayerToCursor;
         StartRotationLoop();
+
+        gameObject.layer = playerLayer;
     }
 
     private void OnDisable()

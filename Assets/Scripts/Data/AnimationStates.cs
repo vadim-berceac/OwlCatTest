@@ -9,4 +9,6 @@ public class AnimationStates
     public readonly int MotionSpeedHash =  Animator.StringToHash("MotionSpeed");
     public readonly int InteractHash =  Animator.StringToHash("Interact");
     public readonly int TurnHash =  Animator.StringToHash("Turn");
+    
+    public readonly int HashActivePara = Animator.StringToHash ("Active");
 }

@@ -41,14 +41,13 @@ public class DialogueCanvasController : MonoBehaviour
                 cancellationToken: cancellationToken
             );
 
-            // Дополнительная защита на случай, если объект уже уничтожен
             if (this == null || !gameObject) return;
 
             animator.SetBool(_animationStates.HashActivePara, false);
         }
         catch (OperationCanceledException)
         {
-            // Нормальная отмена — ничего не делаем
+            
         }
     }
 

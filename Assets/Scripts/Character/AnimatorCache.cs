@@ -8,8 +8,6 @@ public class AnimatorCache : IDisposable
     private readonly ICharacterInput _characterInput;
     private readonly Animator _animator;
     private readonly AnimationStates _animationStates;
-    private readonly Character _character;
-
     private CancellationTokenSource _motionCts;
     private UniTask _motionTask;
     private Vector2 _targetMotion;
@@ -17,17 +15,12 @@ public class AnimatorCache : IDisposable
     private float _targetSpeed;
     private float _currentSpeed;
 
-    public bool IsOnInteract  
-        => _animator.GetCurrentAnimatorStateInfo(0).shortNameHash 
-           == _animationStates.InteractStateHash;
-
     public AnimatorCache(ICharacterInput characterInput, Animator animator,
-        AnimationStates animationStates, Character character)
+        AnimationStates animationStates)
     {
         _characterInput = characterInput;
         _animator = animator;
         _animationStates = animationStates;
-        _character = character;
 
         _currentMotion = new Vector2(
             _animator.GetFloat(_animationStates.MotionXHash),
@@ -38,17 +31,23 @@ public class AnimatorCache : IDisposable
 
         _characterInput.OnMove += OnMove;
         _characterInput.OnRun += OnRun;
-        _characterInput.OnInteract += OnInteract;
-        _character.OnRotationDirection += OnTurn;
     }
 
     public void Dispose()
     {
         _characterInput.OnMove -= OnMove;
         _characterInput.OnRun -= OnRun;
-        _characterInput.OnInteract -= OnInteract;
-        _character.OnRotationDirection -= OnTurn;
         StopMotionSmoothing();
+    }
+    
+    public void SetInteract(bool value)
+    { 
+        _animator.SetBool(_animationStates.InteractHash, value);
+    }
+    
+    public void OnTurn(float turn)
+    {
+        _animator.SetFloat(_animationStates.TurnHash, turn);
     }
 
     private void OnMove(Vector2 input)
@@ -62,17 +61,7 @@ public class AnimatorCache : IDisposable
         _targetSpeed = run ? 1f : 0f;
         StartMotionSmoothing();
     }
-
-    private void OnInteract()
-    {
-        _animator.SetTrigger(_animationStates.InteractHash);
-    }
-
-    private void OnTurn(float turn)
-    {
-        _animator.SetFloat(_animationStates.TurnHash, turn);
-    }
-
+    
     private void StartMotionSmoothing()
     {
         StopMotionSmoothing();

@@ -41,6 +41,11 @@ public class CharacterInstaller : MonoInstaller
             .NonLazy();
         
         Container
+            .BindInterfacesAndSelfTo<PlayableGraphHandle>()
+            .AsSingle()
+            .NonLazy();
+        
+        Container
             .BindInterfacesAndSelfTo<CharacterPhysics>()
             .AsSingle()
             .NonLazy();

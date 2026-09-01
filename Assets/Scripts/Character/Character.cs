@@ -18,16 +18,18 @@ public class Character : MonoBehaviour
     [Inject] private readonly ICharacterInput _currentInput;
     [Inject] private readonly Cursor _cursor;
     [Inject] private readonly Transform _transform;
-    [Inject] private readonly Animator _animator;
     [Inject] private readonly AnimationStates _animationStates;
+    [Inject] private readonly AnimatorCache _animCache;
     [Inject] private readonly CameraSystem _cameraSystem;
     [Inject] private readonly InteractableObject _interactableObject;
+    [Inject] private readonly PlayableGraphHandle _graphHandle;
 
     private Quaternion _targetRotation;
     private CancellationTokenSource _rotationCts;
     private float _lastRotationDirection;
     
     public event Action<float> OnRotationDirection;
+    public bool IsInteracting { get; private set; }
 
     private void OnEnable()
     {
@@ -43,6 +45,8 @@ public class Character : MonoBehaviour
         StartRotationLoop();
 
         gameObject.layer = playerLayer;
+        
+        OnRotationDirection += OnTurn;
     }
 
     private void OnDisable()
@@ -54,6 +58,40 @@ public class Character : MonoBehaviour
         _cameraSystem.SetTarget(null);
         _cursor.OnCursorMoved -= RotatePlayerToCursor;
         StopRotationLoop();
+        
+        OnRotationDirection -= OnTurn;
+    }
+    
+    private void Update()
+    {
+        if (_graphHandle.IsValid && (IsInteracting || _graphHandle.IsBlending))
+        {
+            _graphHandle.Evaluate(Time.deltaTime);
+        }
+    }
+    
+    public void SetInteracting(bool value)
+    {
+        IsInteracting = value;
+        _animCache?.SetInteract(value);
+    }
+    
+    public void PlayInteractClip(AnimationClip clip, float blendLength, AvatarMask mask = null, bool isAdditive = false)
+    {
+       if (!_graphHandle.IsValid || clip == null) return;
+       _graphHandle.PlayClip(clip, blendLength, mask, isAdditive);
+    }
+       
+    public void StopInteractClip(float blendLength = 0f)
+    {
+        if (!_graphHandle.IsValid) return;
+    
+        _graphHandle.Stop(blendLength);
+    }
+
+    private void OnTurn(float turn)
+    {
+        _animCache.OnTurn(turn);
     }
 
     private void StartRotationLoop()
@@ -95,7 +133,7 @@ public class Character : MonoBehaviour
 
     private void RotatePlayerToCursor(Vector3 cursorPosition)
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).shortNameHash == _animationStates.InteractStateHash)
+        if (IsInteracting)
         {
             return;
         }

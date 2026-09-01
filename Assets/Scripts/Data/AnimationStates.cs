@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class AnimationStates
 {
-    public readonly int InteractStateHash = Animator.StringToHash("InteractState");
-    
     public readonly int MotionXHash =  Animator.StringToHash("MotionX");
     public readonly int MotionYHash =  Animator.StringToHash("MotionY");
     public readonly int MotionSpeedHash =  Animator.StringToHash("MotionSpeed");

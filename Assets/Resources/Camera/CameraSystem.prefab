@@ -189,3 +189,4 @@ MonoBehaviour:
   zoomMin: 3
   zoomMax: 8
   offset: {x: 0, y: 1.5, z: 0}
+  updateTiming: 15

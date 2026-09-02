@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CharacterPhysics : IDisposable
 {
+    private const string ElevatorTag = "Elevator";
     private readonly Collider _col;
     private readonly Character _character;
     private readonly Transform _transform;
@@ -19,6 +20,7 @@ public class CharacterPhysics : IDisposable
     private float _verticalVelocity;
     private Collider _groundCollider;
     private bool _isGrounded;
+    private Elevator _currentElevator;
 
     private CharacterPhysics(Collider col, Character character,
         Transform transform, GravityCollisionSettings settings,
@@ -88,6 +90,7 @@ public class CharacterPhysics : IDisposable
         {
             _isGrounded = false;
             _groundCollider = null;
+            ClearElevatorParent();
             return;
         }
 
@@ -97,14 +100,45 @@ public class CharacterPhysics : IDisposable
 
         if (!_isGrounded)
         {
+            ClearElevatorParent();
             return;
         }
 
+        if (_groundCollider.CompareTag(ElevatorTag))
+        {
+            if (_currentElevator == null || _currentElevator.transform != _groundCollider.transform.root)
+            {
+                var elevator = _groundCollider.GetComponentInParent<Elevator>();
+                if (elevator != null)
+                {
+                    ClearElevatorParent();
+                    _currentElevator = elevator;
+                    _transform.SetParent(elevator.transform);
+                }
+            }
+        }
+        else
+        {
+            ClearElevatorParent();
+        }
+
+        if (_currentElevator)
+        {
+            return;
+        }
         var distanceToGround = hit.distance - _settings.SkinWidth;
         if (Mathf.Abs(distanceToGround) > 0.001f)
         {
             _transform.position += Vector3.down * distanceToGround;
         }
+    }
+    
+    private void ClearElevatorParent()
+    {
+        if (_currentElevator == null) return;
+
+        _transform.SetParent(null);
+        _currentElevator = null;
     }
 
     private void ApplyGravity(float dt)

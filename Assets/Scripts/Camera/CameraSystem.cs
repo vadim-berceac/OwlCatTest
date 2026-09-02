@@ -12,6 +12,7 @@ public class CameraSystem : MonoBehaviour
    [SerializeField] private float zoomMin;
    [SerializeField] private float zoomMax;
    [SerializeField] private Vector3 offset;
+   [SerializeField] private PlayerLoopTiming updateTiming  = PlayerLoopTiming.Update;
 
    private Transform _currentTarget;
    private Transform _transform;
@@ -79,7 +80,7 @@ public class CameraSystem : MonoBehaviour
                followSpeed);
          }
 
-         await UniTask.Yield(PlayerLoopTiming.Update, token);
+         await UniTask.Yield(updateTiming, token);
       }
    }
 }

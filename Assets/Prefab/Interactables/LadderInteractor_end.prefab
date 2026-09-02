@@ -339,12 +339,12 @@ MonoBehaviour:
   direction: -1
   rotationSpeed: 30
   positionOffset: {x: 0, y: 0, z: -0.75}
-  enterDuration: 0.2
-  enterEase: 27
+  enterDuration: 0.6
+  enterEase: 7
   stopperDisableBuffer: 2
   exitPosition: {fileID: 754212129942466508}
-  exitDuration: 2
-  exitEase: 27
+  exitDuration: 0.6
+  exitEase: 7
   onInteractEnter:
     m_PersistentCalls:
       m_Calls:

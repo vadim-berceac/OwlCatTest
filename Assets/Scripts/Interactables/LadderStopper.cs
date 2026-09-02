@@ -25,20 +25,13 @@ public class LadderStopper : MonoBehaviour
     {
         if (!trigger)
             return;
-        
-        Debug.Log(other.name);
 
         if (!other.TryGetComponent(out Character character))
-        {
             return;
-        }
 
         if (!character.IsOnLadder && (character != ladder.CurrentController || ladder.OtherEnd.CurrentController))
-        {
             return;
-        }
 
         ladder.OnInteractExit();
-        ladder.OtherEnd.OnInteractExit();
     }
 }

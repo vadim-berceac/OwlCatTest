@@ -38,6 +38,7 @@ public class LadderInteractor : MonoBehaviour
    private Sequence _enterTween;
    private Sequence _exitTween;
    private Tween _stopperReenableTween;
+   private bool _isExiting;
 
    private void OnEnable()
    {
@@ -155,9 +156,11 @@ public class LadderInteractor : MonoBehaviour
          owner = OtherEnd;
       }
 
-      if (!controller || !controller.IsOnLadder)
+      if (!controller || !controller.IsOnLadder || owner._isExiting)
          return;
 
+      owner._isExiting = true;
+      controller.SetOnLadder(false);
       onInteractExit?.Invoke(controller);
 
       owner.StopRotationLoop();
@@ -183,9 +186,9 @@ public class LadderInteractor : MonoBehaviour
 
    private static void FinishExit(LadderInteractor owner, Character controller)
    {
-      controller.SetOnLadder(false);
       owner.CurrentController = null;
       owner._isPlaying = false;
+      owner._isExiting = false;
    }
 
    private void StartRotationLoop()

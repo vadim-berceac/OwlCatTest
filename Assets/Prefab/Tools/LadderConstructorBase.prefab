@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2717868611699431398}
   - component: {fileID: 1343435354063583629}
   m_Layer: 12
-  m_Name: LadderConstructor
+  m_Name: LadderConstructorBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
   endZoneScale: {x: 2, y: 1, z: 1}
   cellHeight: 1
   cellPivotOffset: 0.5
-  cellCount: 5
+  cellCount: 0
   spawnedCells:
   - {fileID: 0}
   - {fileID: 0}

@@ -140,18 +140,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderInteractor
   trigger: {fileID: 3795298381287597238}
+  stopper: {fileID: 499393979018257997}
   walkSpeed: 0.6
   runSpeed: 1.2
   direction: 1
   rotationSpeed: 30
-  positionOffset: {x: 0, y: -0.15, z: 0.6}
-  enterDuration: 0.2
+  positionOffset: {x: 0, y: -0.15, z: 0.65}
+  enterDuration: 0.1
+  enterEase: 6
+  stopperDisableBuffer: 0.5
+  exitPosition: {fileID: 0}
+  exitDuration: 0.2
+  exitEase: 6
   onInteractEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 336098252464283717}
-        m_TargetAssemblyTypeName: DialogueAdapter, Assembly-CSharp
-        m_MethodName: Enable
+      - m_Target: {fileID: 6081614499672213925}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -164,9 +170,9 @@ MonoBehaviour:
   onInteractExit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 336098252464283717}
-        m_TargetAssemblyTypeName: DialogueAdapter, Assembly-CSharp
-        m_MethodName: Enable
+      - m_Target: {fileID: 6081614499672213925}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -336,3 +342,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderStopper
   trigger: {fileID: 1635455021263320525}
+  ladder: {fileID: 4003010740094868908}

@@ -59,6 +59,13 @@ public class LadderConstructor : MonoBehaviour
     private GameObject lastEndZonePrefab;
 
     public float TotalHeight => cellCount * cellHeight;
+    
+    private void Awake()
+    {
+        // На старте сцены зоны уже могут быть созданы в редакторе,
+        // поэтому просто прокидываем ссылки между LadderInteractor
+        LinkZones();
+    }
 
     private void OnValidate()
     {
@@ -325,6 +332,42 @@ public class LadderConstructor : MonoBehaviour
             new Vector3(0f, 0f, 0f) + startZoneOffset, startZoneScale);
         spawnedEndZone = EnsureZone(spawnedEndZone, endZonePrefab, "EndZone",
             new Vector3(0f, cellCount * cellHeight, 0f) + endZoneOffset, endZoneScale);
+
+        LinkZones();
+    }
+
+    private void LinkZones()
+    {
+        LadderInteractor startInteractor = null;
+        LadderInteractor endInteractor = null;
+
+        if (spawnedStartZone)
+        {
+            startInteractor = spawnedStartZone.GetComponent<LadderInteractor>();
+            if (!startInteractor)
+            {
+                Debug.LogWarning(
+                    "LadderConstructor: экземпляр startZonePrefab не содержит компонент LadderInteractor.",
+                    this);
+            }
+        }
+
+        if (spawnedEndZone)
+        {
+            endInteractor = spawnedEndZone.GetComponent<LadderInteractor>();
+            if (!endInteractor)
+            {
+                Debug.LogWarning(
+                    "LadderConstructor: экземпляр endZonePrefab не содержит компонент LadderInteractor.",
+                    this);
+            }
+        }
+
+        if (startInteractor && endInteractor)
+        {
+            startInteractor.SetOtherEnd(endInteractor);
+            endInteractor.SetOtherEnd(startInteractor);
+        }
     }
 
     private Transform EnsureZone(Transform existing, GameObject prefab, string name, Vector3 localPos, Vector3 localScale)

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2595829709544127773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 754212129942466508}
+  m_Layer: 0
+  m_Name: ExitPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &754212129942466508
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2595829709544127773}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.65, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 476808862366850510}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2930812778324569423
 GameObject:
   m_ObjectHideFlags: 0
@@ -29,8 +60,8 @@ Transform:
   m_GameObject: {fileID: 2930812778324569423}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 0.2, z: 1}
+  m_LocalPosition: {x: 0, y: 0.4, z: -1.25}
+  m_LocalScale: {x: 1, y: 0.2, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 476808862366850510}
@@ -114,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderStopper
   trigger: {fileID: 7428113219734494229}
+  ladder: {fileID: 7493066564726341942}
 --- !u!1 &4300047326790889451
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +227,7 @@ Transform:
   m_Children:
   - {fileID: 6089160725749872572}
   - {fileID: 7745694372464600492}
+  - {fileID: 754212129942466508}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4584737237363718933
@@ -300,12 +333,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderInteractor
   trigger: {fileID: 6943974494640726606}
+  stopper: {fileID: 2744864021345144143}
   walkSpeed: 0.6
   runSpeed: 1.2
   direction: -1
   rotationSpeed: 30
-  positionOffset: {x: 0, y: -0.15, z: 0.6}
+  positionOffset: {x: 0, y: 0, z: -0.75}
   enterDuration: 0.2
+  enterEase: 27
+  stopperDisableBuffer: 2
+  exitPosition: {fileID: 754212129942466508}
+  exitDuration: 2
+  exitEase: 27
   onInteractEnter:
     m_PersistentCalls:
       m_Calls:

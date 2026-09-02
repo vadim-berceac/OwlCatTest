@@ -45,6 +45,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderConstructor
   cellPrefab: {fileID: 6858225088369751116, guid: 2320be5431d608b478ae8b708bb1d1f7, type: 3}
+  startZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+  startZoneOffset: {x: 0, y: 0, z: -0.7}
+  startZoneScale: {x: 2, y: 1, z: 1.5}
+  endZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+  endZoneOffset: {x: 0, y: 0, z: 0.7}
+  endZoneScale: {x: 2, y: 1, z: 1.5}
   cellHeight: 1
+  cellPivotOffset: 0.5
   cellCount: 0
   spawnedCells: []
+  spawnedStartZone: {fileID: 0}
+  spawnedEndZone: {fileID: 0}
+  lastStartZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+  lastEndZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}

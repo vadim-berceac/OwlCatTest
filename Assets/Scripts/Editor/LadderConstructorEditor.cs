@@ -17,6 +17,16 @@ public class LadderConstructorEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cellPrefab"));
+
+        EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("startZonePrefab"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("startZoneOffset"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("startZoneScale"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("endZonePrefab"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("endZoneOffset"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("endZoneScale"));
+
+        EditorGUILayout.Space();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("cellHeight"));
 
         var cellCountProp = serializedObject.FindProperty("cellCount");
@@ -100,18 +110,22 @@ public class LadderConstructorEditor : Editor
             Handles.ConeHandleCap,
             0f);
 
-        if (EditorGUI.EndChangeCheck())
+        if (!EditorGUI.EndChangeCheck())
         {
-            var localY = _target.transform.InverseTransformPoint(newHandlePos).y;
-            var newCount = Mathf.Max(0, Mathf.RoundToInt(localY / _target.cellHeight));
-
-            if (newCount != _target.cellCount)
-            {
-                Undo.RecordObject(_target, "Resize Ladder");
-                _target.cellCount = newCount;
-                _target.Construct();
-                EditorUtility.SetDirty(_target);
-            }
+            return;
         }
+        
+        var localY = _target.transform.InverseTransformPoint(newHandlePos).y;
+        var newCount = Mathf.Max(0, Mathf.RoundToInt(localY / _target.cellHeight));
+
+        if (newCount == _target.cellCount)
+        {
+            return;
+        }
+        
+        Undo.RecordObject(_target, "Resize Ladder");
+        _target.cellCount = newCount;
+        _target.Construct();
+        EditorUtility.SetDirty(_target);
     }
 }

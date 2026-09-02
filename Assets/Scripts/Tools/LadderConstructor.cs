@@ -12,6 +12,25 @@ public class LadderConstructor : MonoBehaviour
     [Tooltip("Префаб ячейки — обычно это тот же префаб, на который навешен этот скрипт.")]
     public GameObject cellPrefab;
 
+    [Header("Интерактивные зоны")]
+    [Tooltip("Префаб зоны в начале лестницы (у нижней ячейки).")]
+    public GameObject startZonePrefab;
+
+    [Tooltip("Смещение зоны в начале лестницы (локальные координаты).")]
+    public Vector3 startZoneOffset = Vector3.zero;
+
+    [Tooltip("Размер (масштаб) зоны в начале лестницы.")]
+    public Vector3 startZoneScale = Vector3.one;
+
+    [Tooltip("Префаб зоны в конце лестницы (у верхней ячейки).")]
+    public GameObject endZonePrefab;
+
+    [Tooltip("Смещение зоны в конце лестницы (локальные координаты).")]
+    public Vector3 endZoneOffset = Vector3.zero;
+
+    [Tooltip("Размер (масштаб) зоны в конце лестницы.")]
+    public Vector3 endZoneScale = Vector3.one;
+
     [Header("Параметры")]
     [Tooltip("Высота одной ячейки.")]
     public float cellHeight = 1f;
@@ -27,7 +46,47 @@ public class LadderConstructor : MonoBehaviour
     [SerializeField, HideInInspector]
     private List<Transform> spawnedCells = new List<Transform>();
 
+    [SerializeField, HideInInspector]
+    private Transform spawnedStartZone;
+
+    [SerializeField, HideInInspector]
+    private Transform spawnedEndZone;
+
+    [SerializeField, HideInInspector]
+    private GameObject lastStartZonePrefab;
+
+    [SerializeField, HideInInspector]
+    private GameObject lastEndZonePrefab;
+
     public float TotalHeight => cellCount * cellHeight;
+
+    private void OnValidate()
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying) return;
+
+        var startChanged = startZonePrefab != lastStartZonePrefab;
+        var endChanged = endZonePrefab != lastEndZonePrefab;
+
+        if (startChanged || endChanged)
+        {
+            lastStartZonePrefab = startZonePrefab;
+            lastEndZonePrefab = endZonePrefab;
+
+            EditorApplication.delayCall += () =>
+            {
+                if (this) Construct();
+            };
+        }
+        else if (spawnedStartZone || spawnedEndZone)
+        {
+            EditorApplication.delayCall += () =>
+            {
+                if (this) UpdateZones();
+            };
+        }
+#endif
+    }
 
     public void Construct()
     {
@@ -55,6 +114,8 @@ public class LadderConstructor : MonoBehaviour
             for (var i = spawnedCells.Count - 1; i >= cellCount; i--)
                 RemoveCellAt(i);
         }
+
+        UpdateZones();
     }
 
 #if UNITY_EDITOR
@@ -70,7 +131,7 @@ public class LadderConstructor : MonoBehaviour
 
         if (PrefabUtility.IsPartOfPrefabInstance(obj))
         {
-            GameObject source = PrefabUtility.GetCorrespondingObjectFromSource(obj);
+            var source = PrefabUtility.GetCorrespondingObjectFromSource(obj);
             if (source) return source;
         }
 
@@ -92,7 +153,7 @@ public class LadderConstructor : MonoBehaviour
 
     private void AddCell(int index)
     {
-        GameObject cell = null;
+        GameObject cell;
 
 #if UNITY_EDITOR
         if (!Application.isPlaying)
@@ -249,6 +310,122 @@ public class LadderConstructor : MonoBehaviour
         else
 #endif
             Destroy(cell.gameObject);
+    }
+
+    private void UpdateZones()
+    {
+        if (cellCount <= 0)
+        {
+            DestroyZone(ref spawnedStartZone);
+            DestroyZone(ref spawnedEndZone);
+            return;
+        }
+
+        spawnedStartZone = EnsureZone(spawnedStartZone, startZonePrefab, "StartZone",
+            new Vector3(0f, 0f, 0f) + startZoneOffset, startZoneScale);
+        spawnedEndZone = EnsureZone(spawnedEndZone, endZonePrefab, "EndZone",
+            new Vector3(0f, cellCount * cellHeight, 0f) + endZoneOffset, endZoneScale);
+    }
+
+    private Transform EnsureZone(Transform existing, GameObject prefab, string name, Vector3 localPos, Vector3 localScale)
+    {
+        if (!prefab)
+        {
+            DestroyZone(ref existing);
+            return null;
+        }
+
+        if (existing && !IsZoneFromPrefab(existing, prefab))
+        {
+            DestroyZone(ref existing);
+        }
+
+        if (!existing)
+        {
+            existing = CreateZone(prefab, name);
+        }
+
+        if (!existing) return null;
+
+        existing.localPosition = localPos;
+        existing.localRotation = Quaternion.identity;
+        existing.localScale = localScale;
+        return existing;
+    }
+
+    private bool IsZoneFromPrefab(Transform zone, GameObject prefab)
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying) return true;
+
+        var zoneSource = ResolvePrefabAsset(zone.gameObject);
+        var prefabSource = ResolvePrefabAsset(prefab);
+        return zoneSource && prefabSource && zoneSource == prefabSource;
+#else
+        return true;
+#endif
+    }
+
+    private Transform CreateZone(GameObject prefab, string name)
+    {
+        GameObject zone = null;
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            var sourceAsset = ResolvePrefabAsset(prefab);
+
+            if (sourceAsset)
+            {
+                zone = (GameObject)PrefabUtility.InstantiatePrefab(sourceAsset, transform);
+            }
+            else
+            {
+                zone = Instantiate(prefab, transform);
+            }
+
+            if (!zone)
+            {
+                Debug.LogError($"LadderConstructor: не удалось создать зону {name}.", this);
+                return null;
+            }
+
+            Undo.RegisterCreatedObjectUndo(zone, $"Add {name}");
+        }
+        else
+#endif
+        {
+            zone = Instantiate(prefab, transform);
+        }
+
+        zone.name = name;
+
+        var childConstructor = zone.GetComponent<LadderConstructor>();
+        if (childConstructor)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                Undo.DestroyObjectImmediate(childConstructor);
+            else
+#endif
+                Destroy(childConstructor);
+        }
+
+        return zone.transform;
+    }
+
+    private void DestroyZone(ref Transform zone)
+    {
+        if (!zone) return;
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            Undo.DestroyObjectImmediate(zone.gameObject);
+        else
+#endif
+            Destroy(zone.gameObject);
+
+        zone = null;
     }
 
     public void ClearAll()

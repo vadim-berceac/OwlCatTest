@@ -86,7 +86,6 @@ public class LadderInteractor : MonoBehaviour
       _currentController.SetOnLadder(true, direction);
       _isPlaying = true;
 
-      // Целевая позиция: притягиваем по XZ, Y оставляем текущим
       var targetPosition = transform.position + positionOffset;
       targetPosition.y = _currentController.transform.position.y;
 
@@ -101,7 +100,7 @@ public class LadderInteractor : MonoBehaviour
       var startRot = _currentController.transform.rotation;
       var targetRot = transform.rotation;
 
-      float elapsed = 0f;
+      var elapsed = 0f;
 
       while (elapsed < enterDuration)
       {
@@ -109,25 +108,20 @@ public class LadderInteractor : MonoBehaviour
             return;
 
          elapsed += Time.deltaTime;
-         float t = Mathf.Clamp01(elapsed / enterDuration);
+         var t = Mathf.Clamp01(elapsed / enterDuration);
 
-         // Плавное перемещение
          _currentController.transform.position = Vector3.Lerp(startPos, targetPosition, t);
-
-         // Плавный поворот
          _currentController.transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
 
          await UniTask.Yield(PlayerLoopTiming.Update, token);
       }
 
-      // Финальная фиксация
       if (_currentController)
       {
          _currentController.transform.position = targetPosition;
          _currentController.transform.rotation = targetRot;
       }
 
-      // После завершения входа запускаем основной цикл лестницы
       if (!token.IsCancellationRequested)
          StartRotationLoop();
    }
@@ -182,7 +176,6 @@ public class LadderInteractor : MonoBehaviour
       {
          if (_isPlaying && _currentController)
          {
-            // Постоянно дотягиваем поворот (на случай небольших отклонений)
             _currentController.transform.rotation = Quaternion.Slerp(
                _currentController.transform.rotation,
                transform.rotation,

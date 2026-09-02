@@ -109,7 +109,7 @@ public class LadderInteractor : MonoBehaviour
       CurrentController.SetOnLadder(true, _currentDirection);
       _isPlaying = true;
 
-      var targetPosition = transform.position + positionOffset;
+      var targetPosition = transform.TransformPoint(positionOffset);
       targetPosition.y = CurrentController.transform.position.y;
 
       PlayEnterTween(targetPosition);

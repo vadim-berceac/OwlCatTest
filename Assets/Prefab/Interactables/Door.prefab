@@ -48,8 +48,8 @@ MonoBehaviour:
   - <LeafTransform>k__BackingField: {fileID: 6520807995027329181}
     <OpenAngle>k__BackingField: -120
     <OpenSpeed>k__BackingField: 60
-    <CloseAutomatic>k__BackingField: 1
-    <CloseDelay>k__BackingField: 10
+    <CloseAutomatic>k__BackingField: 0
+    <CloseDelay>k__BackingField: 0
     isOpen: 0
     onOpenStart:
       m_PersistentCalls:

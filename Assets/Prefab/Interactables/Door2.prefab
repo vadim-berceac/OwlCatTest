@@ -217,6 +217,10 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: leafs.Array.data[0].<CloseDelay>k__BackingField
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: leafs.Array.data[1].<CloseDelay>k__BackingField
       value: 10
       objectReference: {fileID: 0}
@@ -224,6 +228,10 @@ PrefabInstance:
       propertyPath: leafs.Array.data[1].<LeafTransform>k__BackingField
       value: 
       objectReference: {fileID: 7113590166607530930}
+    - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: leafs.Array.data[0].<CloseAutomatic>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: leafs.Array.data[1].<CloseAutomatic>k__BackingField
       value: 1

@@ -6,6 +6,7 @@ using UnityEngine;
 public class CharacterPhysics : IDisposable
 {
     private readonly Collider _col;
+    private readonly Character _character;
     private readonly Transform _transform;
     private readonly CapsuleCollider _capsule;
     private readonly LayerMask _collisionMask;
@@ -19,10 +20,12 @@ public class CharacterPhysics : IDisposable
     private Collider _groundCollider;
     private bool _isGrounded;
 
-    private CharacterPhysics(Collider col, Transform transform, GravityCollisionSettings settings,
+    private CharacterPhysics(Collider col, Character character,
+        Transform transform, GravityCollisionSettings settings,
         LayerMask? collisionMask = null)
     {
         _col = col;
+        _character = character;
         _transform = transform;
         _collisionMask = collisionMask ?? Physics.AllLayers;
         _settings = settings;
@@ -57,7 +60,16 @@ public class CharacterPhysics : IDisposable
 
     private void Tick(float dt)
     {
-        CheckGround();
+        if (!_character.IsOnLadder)
+        {
+            CheckGround();
+        }
+        else
+        {
+            _isGrounded = false;
+            _groundCollider = null;
+        }
+
         ApplyGravity(dt);
         MoveVertical(_verticalVelocity * dt);
     }
@@ -97,6 +109,13 @@ public class CharacterPhysics : IDisposable
 
     private void ApplyGravity(float dt)
     {
+        if (_character.IsOnLadder)
+        {
+            if (_verticalVelocity < 0f)
+                _verticalVelocity = 0f;
+            return;
+        }
+
         if (_isGrounded)
         {
             if (_verticalVelocity < 0f)
@@ -110,12 +129,15 @@ public class CharacterPhysics : IDisposable
 
     private void MoveVertical(float verticalDelta)
     {
-        var delta = _isGrounded ? Vector3.zero : new Vector3(0f, verticalDelta, 0f);
+        var delta = (!_isGrounded || _character.IsOnLadder)
+            ? new Vector3(0f, verticalDelta, 0f)
+            : Vector3.zero;
 
         if (delta != Vector3.zero)
             _transform.position += delta;
 
-        ResolveOverlaps();
+        if (!_character.IsOnLadder)
+            ResolveOverlaps();
     }
 
     private void ResolveOverlaps()

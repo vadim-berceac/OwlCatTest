@@ -39,10 +39,26 @@ public class AnimatorCache : IDisposable
         _characterInput.OnRun -= OnRun;
         StopMotionSmoothing();
     }
+
+    public float GetMotionSpeed()
+    {
+        return _animator.GetFloat(_animationStates.MotionSpeedHash);
+    }
+
+    public float GetMotionY()
+    {
+        return _animator.GetFloat(_animationStates.MotionYHash);
+    }
     
     public void SetInteract(bool value)
     { 
         _animator.SetBool(_animationStates.InteractHash, value);
+    }
+
+    public void SetOnLadder(bool value, float direction)
+    {
+        _animator.SetBool(_animationStates.Ladder, value);
+        _animator.SetFloat(_animationStates.LadderDirectionHash, direction);
     }
     
     public void OnTurn(float turn)

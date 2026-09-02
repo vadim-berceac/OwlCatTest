@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderConstructor
   cellPrefab: {fileID: 6858225088369751116, guid: 2320be5431d608b478ae8b708bb1d1f7, type: 3}
-  startZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+  startZonePrefab: {fileID: 1267048463156707520, guid: 3759ff27cd7cea54ca87050f7abedc23, type: 3}
   startZoneOffset: {x: 0, y: 0, z: -0.7}
   startZoneScale: {x: 2, y: 1, z: 1.5}
-  endZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+  endZonePrefab: {fileID: 5026062217522118501, guid: 729d3cebf4925cf4583b27b887a50546, type: 3}
   endZoneOffset: {x: 0, y: 0, z: 0.7}
   endZoneScale: {x: 2, y: 1, z: 1.5}
   cellHeight: 1
@@ -57,5 +57,5 @@ MonoBehaviour:
   spawnedCells: []
   spawnedStartZone: {fileID: 0}
   spawnedEndZone: {fileID: 0}
-  lastStartZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
-  lastEndZonePrefab: {fileID: 6053095384428005994, guid: c9983902dd3053847ab386be9850fce6, type: 3}
+  lastStartZonePrefab: {fileID: 1267048463156707520, guid: 3759ff27cd7cea54ca87050f7abedc23, type: 3}
+  lastEndZonePrefab: {fileID: 5026062217522118501, guid: 729d3cebf4925cf4583b27b887a50546, type: 3}

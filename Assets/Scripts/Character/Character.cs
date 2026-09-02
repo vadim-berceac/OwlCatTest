@@ -30,6 +30,7 @@ public class Character : MonoBehaviour
     
     public event Action<float> OnRotationDirection;
     public bool IsInteracting { get; private set; }
+    public bool IsOnLadder { get; private set; }
 
     private void OnEnable()
     {
@@ -75,6 +76,22 @@ public class Character : MonoBehaviour
         IsInteracting = value;
         _animCache?.SetInteract(value);
     }
+
+    public void SetOnLadder(bool value, float direction = 0)
+    {
+        IsOnLadder = value;
+        _animCache?.SetOnLadder(value, direction);
+    }
+
+    public float GetMotionSpeed()
+    {
+        return _animCache.GetMotionSpeed();
+    }
+
+    public float GetMotionY()
+    {
+        return _animCache.GetMotionY();
+    }
     
     public void PlayInteractClip(AnimationClip clip, float blendLength, AvatarMask mask = null, bool isAdditive = false)
     {
@@ -111,7 +128,7 @@ public class Character : MonoBehaviour
     {
         while (!token.IsCancellationRequested)
         {
-            if (!IsInteracting) 
+            if (!IsInteracting && !IsOnLadder) 
             {
                 var previousRotation = _transform.rotation;
                 _transform.rotation = Quaternion.Slerp(_transform.rotation, _targetRotation, rotationToCursorSpeed * Time.deltaTime);
@@ -136,7 +153,7 @@ public class Character : MonoBehaviour
 
     private void RotatePlayerToCursor(Vector3 cursorPosition)
     {
-        if (IsInteracting)
+        if (IsInteracting || IsOnLadder)
         {
             return;
         }

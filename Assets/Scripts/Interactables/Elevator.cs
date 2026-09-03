@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Elevator : MonoBehaviour
 {
@@ -9,8 +10,8 @@ public class Elevator : MonoBehaviour
 
     [SerializeField] private PlayerLoopTiming updateTiming = PlayerLoopTiming.LastUpdate;
 
-    public event Action<int> OnDeparture;
-    public event Action<int> OnArrived;
+    public UnityEvent<int> onDeparture;
+    public UnityEvent<int> onArrived;
 
     private int _currentIndex;
     private CancellationTokenSource _cts;
@@ -54,7 +55,7 @@ public class Elevator : MonoBehaviour
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 
-        OnDeparture?.Invoke(_currentIndex);
+        onDeparture?.Invoke(_currentIndex);
 
         var dir = targetIndex > _currentIndex ? 1 : -1;
 
@@ -87,7 +88,7 @@ public class Elevator : MonoBehaviour
                 _currentIndex = i + dir;
             }
 
-            OnArrived?.Invoke(_currentIndex);
+            onArrived?.Invoke(_currentIndex);
         }
         catch (OperationCanceledException) { }
     }

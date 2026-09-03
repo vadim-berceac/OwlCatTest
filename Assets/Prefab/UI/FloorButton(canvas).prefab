@@ -177,6 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3954eabd8807f3047a388da9c0c070f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioPlayer
+  mode: 1
   audioSource: {fileID: 1584940849291621731}
   clips:
   - {fileID: 8300000, guid: 794286517efe29a45a602ae4b0a64a2a, type: 3}

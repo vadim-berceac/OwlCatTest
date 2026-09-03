@@ -153,8 +153,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1104675820711912080, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1104675820711912080, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1104675820711912080, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1104675820711912080, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1104675820711912080, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1303205824118807529, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_IsActive
@@ -253,8 +269,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7113590166607530930}
     - target: {fileID: 7260670482182705523, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7260670482182705523, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7260670482182705523, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7260670482182705523, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.5499997
+      objectReference: {fileID: 0}
+    - target: {fileID: 7260670482182705523, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: state

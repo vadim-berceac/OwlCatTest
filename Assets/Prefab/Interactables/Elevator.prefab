@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1235141043276246518}
   - component: {fileID: 1622392431074285693}
   - component: {fileID: 5562798991501447096}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: New Game Object
   m_TagString: Elevator
   m_Icon: {fileID: 0}
@@ -4997,7 +4997,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1812121806183755662}
   - component: {fileID: 5796545528964260829}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Elevator
   m_TagString: Elevator
   m_Icon: {fileID: 0}
@@ -5035,6 +5035,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Elevator
   elevatorPath: {fileID: 0}
   updateTiming: 10
+  onDeparture:
+    m_PersistentCalls:
+      m_Calls: []
+  onArrived:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7452783506044474683
 GameObject:
   m_ObjectHideFlags: 0
@@ -5046,7 +5052,7 @@ GameObject:
   - component: {fileID: 8441638741090028420}
   - component: {fileID: 3845564438978074442}
   - component: {fileID: 760539859419999924}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5144,7 +5150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2083190717275201918}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Model
   m_TagString: Elevator
   m_Icon: {fileID: 0}

@@ -42,6 +42,12 @@ public class SceneInstaller : MonoInstaller
             .NonLazy();
         
         Container
+            .Bind<SceneUI>()
+            .FromComponentInNewPrefabResource("UI/SceneUI")
+            .AsSingle()
+            .NonLazy();
+        
+        Container
             .BindInterfacesAndSelfTo<PlayerInputHandler>()
             .AsSingle()
             .NonLazy();

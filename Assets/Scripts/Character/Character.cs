@@ -39,6 +39,7 @@ public class Character : MonoBehaviour
             return;
         }
 
+        gameObject.AddComponent<AudioListener>();
         _cameraSystem.SetTarget(_transform);
         _targetRotation = _transform.rotation;
         _interactableObject.gameObject.SetActive(false);

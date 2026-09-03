@@ -10,6 +10,7 @@ public class PlayerInputHandler : ICharacterInput, IInitializable, IDisposable
     public Action<bool> OnRun  { get; set;}
     public Action OnInteract { get; set;}
     public Action<float> OnScrollWheel  { get; set;}
+    public Action Pause  { get; set;}
 
     [Inject] private readonly InputActionAsset _inputActionAsset;
     
@@ -18,6 +19,7 @@ public class PlayerInputHandler : ICharacterInput, IInitializable, IDisposable
     private InputAction RunAction => _inputActionAsset.FindAction("Run");
     private InputAction OnInteractAction => _inputActionAsset.FindAction("Interact");
     private InputAction ScrollAction => _inputActionAsset.FindActionMap("UI").FindAction("ScrollWheel");
+    private InputAction PauseAction => _inputActionAsset.FindAction("Pause");
     
     public void Initialize()
     {
@@ -32,7 +34,8 @@ public class PlayerInputHandler : ICharacterInput, IInitializable, IDisposable
        
        OnInteractAction.performed += InteractPressed;
        
-        ScrollAction.performed += ScrollWheel;
+       ScrollAction.performed += ScrollWheel;
+       PauseAction.performed +=  OnPause;
     }
 
     public void Dispose()
@@ -63,6 +66,11 @@ public class PlayerInputHandler : ICharacterInput, IInitializable, IDisposable
         if (ScrollAction != null)
         {
             ScrollAction.performed -= ScrollWheel;
+        }
+
+        if (PauseAction != null)
+        {
+            PauseAction.performed -=  OnPause;
         }
     }
 
@@ -105,5 +113,10 @@ public class PlayerInputHandler : ICharacterInput, IInitializable, IDisposable
     {
         var scrollValue = context.ReadValue<Vector2>();
         OnScrollWheel?.Invoke(scrollValue.y);
+    }
+
+    private void OnPause(InputAction.CallbackContext context)
+    {
+        Pause?.Invoke();
     }
 }

@@ -6,6 +6,7 @@ using Zenject;
 public class CameraSystem : MonoBehaviour
 {
    [SerializeField] private Camera cam;
+   [SerializeField] private AudioSource audioSource;
    [SerializeField] private float followSpeed;
    [SerializeField] private float damping;
    [SerializeField] private float zoomSpeed;
@@ -14,6 +15,8 @@ public class CameraSystem : MonoBehaviour
    [SerializeField] private Vector3 offset;
    [SerializeField] private PlayerLoopTiming updateTiming  = PlayerLoopTiming.Update;
 
+   public AudioSource AudioSource => audioSource;
+   
    private Transform _currentTarget;
    private Transform _transform;
    private Vector3 _velocity;

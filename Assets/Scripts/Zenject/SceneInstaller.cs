@@ -36,6 +36,12 @@ public class SceneInstaller : MonoInstaller
             .NonLazy();
         
         Container
+            .Bind<ElevatorPaneController>()
+            .FromComponentInNewPrefabResource("UI/ElevatorPaneCanvas")
+            .AsSingle()
+            .NonLazy();
+        
+        Container
             .BindInterfacesAndSelfTo<PlayerInputHandler>()
             .AsSingle()
             .NonLazy();

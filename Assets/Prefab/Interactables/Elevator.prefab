@@ -5045,6 +5045,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8441638741090028420}
   - component: {fileID: 3845564438978074442}
+  - component: {fileID: 760539859419999924}
   m_Layer: 0
   m_Name: Volume
   m_TagString: Untagged
@@ -5079,22 +5080,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 149c9a4e3046c23489b5092895c6812d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionVolume
-  shape: 0
-  center: {x: -0.0023956299, y: 0.36283284, z: 0.27629614}
-  boxSize: {x: 3.1176147, y: 0.27433428, z: 2.1083117}
-  sphereRadius: 0.5
-  interactionLayers:
-    serializedVersion: 2
-    m_Bits: 16384
-  drawGizmo: 1
-  drawGizmoOnlyWhenSelected: 0
-  gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.35}
   onEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5796545528964260829}
-        m_TargetAssemblyTypeName: Elevator, Assembly-CSharp
-        m_MethodName: MoveToLast
+      - m_Target: {fileID: 760539859419999924}
+        m_TargetAssemblyTypeName: ElevatorPaneAdapter, Assembly-CSharp
+        m_MethodName: ActivateElevatorPane
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5106,7 +5097,44 @@ MonoBehaviour:
         m_CallState: 2
   onExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 760539859419999924}
+        m_TargetAssemblyTypeName: ElevatorPaneAdapter, Assembly-CSharp
+        m_MethodName: DeactivateElevatorPaneDelay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  shape: 0
+  center: {x: -0.0023956299, y: 0.36283284, z: 0.27629614}
+  boxSize: {x: 3.1176147, y: 0.27433428, z: 2.1083117}
+  sphereRadius: 0.5
+  interactionLayers:
+    serializedVersion: 2
+    m_Bits: 16384
+  drawGizmo: 1
+  drawGizmoOnlyWhenSelected: 0
+  gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.35}
+--- !u!114 &760539859419999924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7452783506044474683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97edd9f5b149c66438075b9aa4286dcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevatorPaneAdapter
+  elevator: {fileID: 5796545528964260829}
+  deactivateDelay: 0.2
+  temporaryDisableTime: 0
 --- !u!1 &7669304534584198556
 GameObject:
   m_ObjectHideFlags: 0

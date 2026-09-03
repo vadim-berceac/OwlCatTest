@@ -16,6 +16,7 @@ public class Elevator : MonoBehaviour
     private CancellationTokenSource _cts;
 
     public int CurrentIndex => _currentIndex;
+    public int FloorCount => elevatorPath.stopPoints.Count;
 
     private void OnEnable()
     {

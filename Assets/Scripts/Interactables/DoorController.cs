@@ -13,37 +13,73 @@ public class DoorController : MonoBehaviour
         Locked = 1,
         Blocked = 2
     }
-    
+
+    private enum MoveMode
+    {
+        Rotate = 0,
+        Slide = 1
+    }
+
     [System.Serializable]
     private class Leaf
     {
         [field: SerializeField] public Transform LeafTransform { get; private set; }
+
+        [Header("Rotate mode")]
         [field: SerializeField, Range(-180, 180)] public float OpenAngle { get; private set; }
-        [field: SerializeField] public float OpenSpeed { get; private set; }
-        [field: SerializeField] public bool CloseAutomatic { get; private set; }
-        [field: SerializeField] public float CloseDelay { get; private set; }
+
+        [Header("Slide mode")]
+        [field: SerializeField] public Vector3 SlideOffset { get; private set; } 
 
         [HideInInspector] public bool isOpen;
-        
-        public UnityEvent onOpenStart, onOpenEnd, onCloseStart, onCloseEnd;
+        [HideInInspector] public Vector3 closedLocalPosition;
+        [HideInInspector] public float closedLocalYAngle;
     }
-    
+
     [SerializeField] private State state = State.Open;
+
+    [Header("Movement")]
+    [SerializeField] private MoveMode mode = MoveMode.Rotate;
+    [SerializeField] private float openSpeed; 
+    [SerializeField] private bool closeAutomatic;
+    [SerializeField] private float closeDelay;
+
     [SerializeField] private Leaf[] leafs;
     [SerializeField] private GameObject[] interactors;
-    
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onOpenStart;
+    [SerializeField] private UnityEvent onOpenEnd;
+    [SerializeField] private UnityEvent onCloseStart;
+    [SerializeField] private UnityEvent onCloseEnd;
+
     [Header("States")]
     [SerializeField] private SpriteRenderer openStateRenderer;
     [SerializeField] private SpriteRenderer lockedStateRenderer;
     [SerializeField] private SpriteRenderer blockedStateRenderer;
-    
+
     private CancellationTokenSource _cts;
+    private bool _isDoorOpen;
 
     private void Awake()
     {
+        CacheClosedTransforms();
         SwitchState((int)state);
     }
-    
+
+    private void CacheClosedTransforms()
+    {
+        if (leafs == null) return;
+
+        foreach (var leaf in leafs)
+        {
+            if (!leaf.LeafTransform) continue;
+
+            leaf.closedLocalPosition = leaf.LeafTransform.localPosition;
+            leaf.closedLocalYAngle = leaf.LeafTransform.localEulerAngles.y;
+        }
+    }
+
     public void OpenLeafs()
     {
         OpenLeafsAsync().Forget();
@@ -65,19 +101,19 @@ public class DoorController : MonoBehaviour
     {
         if (openStateRenderer)
             openStateRenderer.gameObject.SetActive(state == State.Open);
-    
+
         if (lockedStateRenderer)
             lockedStateRenderer.gameObject.SetActive(state == State.Locked);
-    
+
         if (blockedStateRenderer)
             blockedStateRenderer.gameObject.SetActive(state == State.Blocked);
     }
 
     private void UpdateInteractors()
     {
-        if(interactors == null || interactors.Length == 0)
+        if (interactors == null || interactors.Length == 0)
         {
-           return;
+            return;
         }
 
         if (state == State.Open)
@@ -88,7 +124,7 @@ public class DoorController : MonoBehaviour
             }
             return;
         }
-        
+
         foreach (var interactor in interactors)
         {
             interactor.gameObject.SetActive(false);
@@ -97,7 +133,7 @@ public class DoorController : MonoBehaviour
 
     private async UniTask OpenLeafsAsync()
     {
-        if (state != State.Open || leafs == null || leafs.Length == 0)
+        if (state != State.Open || _isDoorOpen || leafs == null || leafs.Length == 0)
         {
             return;
         }
@@ -106,25 +142,35 @@ public class DoorController : MonoBehaviour
         _cts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         var token = _cts.Token;
 
+        onOpenStart?.Invoke();
+
         var tasks = new UniTask[leafs.Length];
         for (var i = 0; i < leafs.Length; i++)
         {
             var leaf = leafs[i];
-            if (leaf.isOpen)
-            {
-                tasks[i] = UniTask.CompletedTask;
-                continue;
-            }
-
-            tasks[i] = OpenLeafAsync(leaf, token);
+            tasks[i] = leaf.isOpen ? UniTask.CompletedTask : MoveLeafAsync(leaf, opening: true, token);
         }
 
         await UniTask.WhenAll(tasks);
+
+        foreach (var leaf in leafs)
+        {
+            leaf.isOpen = true;
+        }
+        _isDoorOpen = true;
+
+        onOpenEnd?.Invoke();
+
+        if (closeAutomatic && !token.IsCancellationRequested)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(closeDelay), cancellationToken: token);
+            await CloseLeafsAsync();
+        }
     }
 
     private async UniTask CloseLeafsAsync()
     {
-        if (state != State.Open || leafs == null || leafs.Length == 0)
+        if (state != State.Open || !_isDoorOpen || leafs == null || leafs.Length == 0)
         {
             return;
         }
@@ -133,65 +179,73 @@ public class DoorController : MonoBehaviour
         _cts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         var token = _cts.Token;
 
+        onCloseStart?.Invoke();
+
         var tasks = new UniTask[leafs.Length];
         for (var i = 0; i < leafs.Length; i++)
         {
             var leaf = leafs[i];
-            if (!leaf.isOpen)
-            {
-                tasks[i] = UniTask.CompletedTask;
-                continue;
-            }
-
-            tasks[i] = CloseLeafAsync(leaf, token);
+            tasks[i] = !leaf.isOpen ? UniTask.CompletedTask : MoveLeafAsync(leaf, opening: false, token);
         }
 
         await UniTask.WhenAll(tasks);
-    }
 
-    private async UniTask OpenLeafAsync(Leaf leaf, CancellationToken token)
-    {
-        leaf.onOpenStart?.Invoke();
-
-        await RotateLeafAsync(leaf, leaf.OpenAngle, token);
-
-        leaf.isOpen = true;
-        leaf.onOpenEnd?.Invoke();
-
-        if (leaf.CloseAutomatic)
+        foreach (var leaf in leafs)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(leaf.CloseDelay), cancellationToken: token);
-            await CloseLeafAsync(leaf, token);
+            leaf.isOpen = false;
         }
+        _isDoorOpen = false;
+
+        onCloseEnd?.Invoke();
     }
 
-    private async UniTask CloseLeafAsync(Leaf leaf, CancellationToken token)
+    private UniTask MoveLeafAsync(Leaf leaf, bool opening, CancellationToken token)
     {
-        leaf.onCloseStart?.Invoke();
+        if (!leaf.LeafTransform)
+        {
+            return UniTask.CompletedTask;
+        }
 
-        await RotateLeafAsync(leaf, 0f, token);
-
-        leaf.isOpen = false;
-        leaf.onCloseEnd?.Invoke();
+        return mode switch
+        {
+            MoveMode.Slide => SlideLeafAsync(leaf, opening, token),
+            _ => RotateLeafAsync(leaf, opening ? leaf.OpenAngle : leaf.closedLocalYAngle, token)
+        };
     }
 
     private async UniTask RotateLeafAsync(Leaf leaf, float targetAngle, CancellationToken token)
     {
-        if (!leaf.LeafTransform)
-        {
-            return;
-        }
-
         var transform = leaf.LeafTransform;
         var currentAngle = transform.localEulerAngles.y;
         var delta = Mathf.DeltaAngle(currentAngle, targetAngle);
-        var duration = Mathf.Abs(delta) / Mathf.Max(leaf.OpenSpeed, 0.01f);
+        var duration = Mathf.Abs(delta) / Mathf.Max(openSpeed, 0.01f);
 
         var tween = transform.DOLocalRotate(
             new Vector3(transform.localEulerAngles.x, targetAngle, transform.localEulerAngles.z),
             duration
         ).SetEase(Ease.Linear);
 
+        await AwaitTween(tween, token);
+    }
+
+    private async UniTask SlideLeafAsync(Leaf leaf, bool opening, CancellationToken token)
+    {
+        var transform = leaf.LeafTransform;
+        var targetPosition = opening
+            ? leaf.closedLocalPosition + leaf.SlideOffset
+            : leaf.closedLocalPosition;
+
+        var distance = Vector3.Distance(transform.localPosition, targetPosition);
+        var duration = distance / Mathf.Max(openSpeed, 0.01f);
+
+        var tween = transform.DOLocalMove(targetPosition, duration)
+            .SetEase(Ease.Linear);
+
+        await AwaitTween(tween, token);
+    }
+
+    private async UniTask AwaitTween(Tween tween, CancellationToken token)
+    {
         var tcs = new UniTaskCompletionSource();
 
         tween.OnComplete(() => tcs.TrySetResult());

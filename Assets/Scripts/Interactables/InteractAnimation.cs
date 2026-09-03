@@ -54,16 +54,24 @@ public class InteractAnimation : MonoBehaviour
          trigger.onEnter.RemoveListener(OnEnter);
          trigger.onExit.RemoveListener(OnExit);
       }
-      
-      if (controller)
-      {
-         _currentController = null;
-      }
 
       if (_input != null)
       {
          _input.OnInteract -= OnInteractEnter;
+         _input.OnInteract -= Interrupt;
       }
+
+      if (_isPlaying && _currentController)
+      {
+         _currentController.SetInteracting(false);
+         var exitBlend = exitClip.Clip ? exitClip.EnterBlendLength : 0.2f;
+         _currentController.StopInteractClip(exitBlend);
+      }
+
+      _currentCollider = null;
+      _currentController = null;
+      _isPlaying = false;
+      _interruptRequested = false;
    }
 
    private void OnEnter(Collider other)
@@ -295,7 +303,7 @@ public class InteractAnimation : MonoBehaviour
    {
       onClipStarted?.Invoke(settings.Clip, settings.EnterBlendLength);
 
-      _currentController.PlayInteractClip(settings.Clip, settings.EnterBlendLength, settings.Mask, settings.IsAdditive);
+      _currentController?.PlayInteractClip(settings.Clip, settings.EnterBlendLength, settings.Mask, settings.IsAdditive);
 
       var waitTime = settings.Clip.length - exitOverlap;
 
@@ -309,7 +317,7 @@ public class InteractAnimation : MonoBehaviour
    {
       onClipStarted?.Invoke(settings.Clip, settings.EnterBlendLength);
 
-      _currentController.PlayInteractClip(settings.Clip, settings.EnterBlendLength, settings.Mask, settings.IsAdditive);
+      _currentController?.PlayInteractClip(settings.Clip, settings.EnterBlendLength, settings.Mask, settings.IsAdditive);
 
       var mainWait = Mathf.Max(settings.Clip.length - exitOverlap, 0f);
 

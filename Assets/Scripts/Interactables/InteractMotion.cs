@@ -302,12 +302,17 @@ public class InteractMotion : MonoBehaviour
         {
             foreach (var col in _interactableColliders)
             {
-                if (!col) continue;
+                if (!col || _activeCharacterController) continue;
                 Physics.IgnoreCollision(col, _activeCharacterController, false);
             }
 
             _collisionDisabled = false;
             _activeCharacterController = null;
         }
+
+        _movedController = null;
+        _resolvedFootTarget = null;
+        _controllerInitialPosition = default;
+        _controllerInitialRotation = default;
     }
 }

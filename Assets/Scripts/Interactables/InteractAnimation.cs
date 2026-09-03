@@ -6,7 +6,7 @@ using Zenject;
 
 public class InteractAnimation : MonoBehaviour
 {
-   [SerializeField] private InteractOnTrigger trigger;
+   [SerializeField] private InteractionActivator trigger;
    [Tooltip("Выбор персонажа напрямую")]
    [SerializeField] private Character controller;
    [SerializeField] private AnimationClipSettings enterClip;

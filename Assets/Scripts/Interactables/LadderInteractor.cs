@@ -7,7 +7,7 @@ using Zenject;
 
 public class LadderInteractor : MonoBehaviour
 {
-   [SerializeField] private InteractOnTrigger trigger;
+   [SerializeField] private InteractionActivator trigger;
    [SerializeField] private LadderStopper stopper;
    [SerializeField] private float walkSpeed;
    [SerializeField] private float runSpeed;

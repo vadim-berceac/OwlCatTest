@@ -13,9 +13,13 @@ public class DialogueCanvasController : MonoBehaviour
     [Inject] private readonly AnimationStates _animationStates;
 
     private CancellationTokenSource _deactivationCts;
+    private CancellationTokenSource _temporaryDisableCts;
+    private bool _isTemporarilyDisabled;
 
     public void ActivateCanvasWithText(string text)
     {
+        if (_isTemporarilyDisabled) return;
+
         CancelDeactivation();
 
         gameObject.SetActive(true);
@@ -29,6 +33,34 @@ public class DialogueCanvasController : MonoBehaviour
 
         _deactivationCts = new CancellationTokenSource();
         DeactivateWithDelayAsync(delay, _deactivationCts.Token).Forget();
+    }
+
+    public void TemporaryDisable(float time)
+    {
+        CancelTemporaryDisable();
+
+        _isTemporarilyDisabled = true;
+        _temporaryDisableCts = new CancellationTokenSource();
+        TemporaryDisableAsync(time, _temporaryDisableCts.Token).Forget();
+    }
+
+    private async UniTask TemporaryDisableAsync(float time, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(time),
+                ignoreTimeScale: false,
+                cancellationToken: cancellationToken
+            );
+
+            if (this == null) return;
+
+            _isTemporarilyDisabled = false;
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     private async UniTask DeactivateWithDelayAsync(float delay, CancellationToken cancellationToken)
@@ -47,7 +79,6 @@ public class DialogueCanvasController : MonoBehaviour
         }
         catch (OperationCanceledException)
         {
-            
         }
     }
 
@@ -61,8 +92,19 @@ public class DialogueCanvasController : MonoBehaviour
         }
     }
 
+    private void CancelTemporaryDisable()
+    {
+        if (_temporaryDisableCts != null)
+        {
+            _temporaryDisableCts.Cancel();
+            _temporaryDisableCts.Dispose();
+            _temporaryDisableCts = null;
+        }
+    }
+
     private void OnDestroy()
     {
         CancelDeactivation();
+        CancelTemporaryDisable();
     }
 }

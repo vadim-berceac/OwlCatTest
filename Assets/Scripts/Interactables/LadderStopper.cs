@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LadderStopper : MonoBehaviour
 {
-    [SerializeField] private InteractOnTrigger trigger;
+    [SerializeField] private InteractionActivator trigger;
     [SerializeField] private LadderInteractor ladder;
     
     private void OnEnable()

@@ -7,6 +7,13 @@ using UnityEngine.Events;
 
 public class DoorController : MonoBehaviour
 {
+    private enum State
+    {
+        Open = 0,
+        Locked = 1,
+        Blocked = 2
+    }
+    
     [System.Serializable]
     private class Leaf
     {
@@ -21,9 +28,21 @@ public class DoorController : MonoBehaviour
         public UnityEvent onOpenStart, onOpenEnd, onCloseStart, onCloseEnd;
     }
     
+    [SerializeField] private State state = State.Open;
     [SerializeField] private Leaf[] leafs;
+    [SerializeField] private GameObject[] interactors;
+    
+    [Header("States")]
+    [SerializeField] private SpriteRenderer openStateRenderer;
+    [SerializeField] private SpriteRenderer lockedStateRenderer;
+    [SerializeField] private SpriteRenderer blockedStateRenderer;
     
     private CancellationTokenSource _cts;
+
+    private void Awake()
+    {
+        SwitchState((int)state);
+    }
     
     public void OpenLeafs()
     {
@@ -35,9 +54,50 @@ public class DoorController : MonoBehaviour
         CloseLeafsAsync().Forget();
     }
 
+    public void SwitchState(int stateIndex)
+    {
+        state = (State) stateIndex;
+        UpdateSprite();
+        UpdateInteractors();
+    }
+
+    private void UpdateSprite()
+    {
+        if (openStateRenderer)
+            openStateRenderer.gameObject.SetActive(state == State.Open);
+    
+        if (lockedStateRenderer)
+            lockedStateRenderer.gameObject.SetActive(state == State.Locked);
+    
+        if (blockedStateRenderer)
+            blockedStateRenderer.gameObject.SetActive(state == State.Blocked);
+    }
+
+    private void UpdateInteractors()
+    {
+        if(interactors == null || interactors.Length == 0)
+        {
+           return;
+        }
+
+        if (state == State.Open)
+        {
+            foreach (var interactor in interactors)
+            {
+                interactor.gameObject.SetActive(true);
+            }
+            return;
+        }
+        
+        foreach (var interactor in interactors)
+        {
+            interactor.gameObject.SetActive(false);
+        }
+    }
+
     private async UniTask OpenLeafsAsync()
     {
-        if (leafs == null || leafs.Length == 0)
+        if (state != State.Open || leafs == null || leafs.Length == 0)
         {
             return;
         }
@@ -64,7 +124,7 @@ public class DoorController : MonoBehaviour
 
     private async UniTask CloseLeafsAsync()
     {
-        if (leafs == null || leafs.Length == 0)
+        if (state != State.Open || leafs == null || leafs.Length == 0)
         {
             return;
         }

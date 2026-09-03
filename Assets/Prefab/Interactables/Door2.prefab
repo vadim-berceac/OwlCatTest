@@ -99,7 +99,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f130dfa5a1960441870e88ea6e6bffb, type: 2}
+  - {fileID: 2100000, guid: 7b94939313f05b64996ffbc0d934653b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -152,9 +152,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1104675820711912080, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303205824118807529, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2292911060491312339, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_Name
       value: Door2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539445196364976962, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3805826558214723640, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4763933360208133278, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -203,6 +219,14 @@ PrefabInstance:
     - target: {fileID: 6559750509063698757, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7260670482182705523, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5499997
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: state
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: leafs.Array.size
@@ -347,6 +371,10 @@ PrefabInstance:
     - target: {fileID: 8170931553543396508, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: leafs.Array.data[1].onOpenStart.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8316421927780879089, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8647934074430927342, guid: 03d23db800fad0d4cb3d9fabb7ff198e, type: 3}
       propertyPath: m_LocalScale.x

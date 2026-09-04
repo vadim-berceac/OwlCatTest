@@ -162,6 +162,55 @@ MonoBehaviour:
   onExitMotionStart:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &2451971380385880310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6645626352831863363}
+  - component: {fileID: 7633066418340680450}
+  m_Layer: 0
+  m_Name: PropBone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6645626352831863363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2451971380385880310}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7776956452113278103}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7633066418340680450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2451971380385880310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b616b47a5a160343b3e6952ee65ab35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PropBones
+  propBones:
+  - <Prop>k__BackingField: {fileID: 691521018616529084}
+    <PropType>k__BackingField: 0
+  - <Prop>k__BackingField: {fileID: 5235055441814051858}
+    <PropType>k__BackingField: 1
 --- !u!1001 &2336869243943143638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -846,6 +895,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       insertIndex: 0
       addedObject: {fileID: 2195672967437281467}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 6645626352831863363}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       insertIndex: 1
@@ -860,9 +912,19 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5699818905021155842}
   m_SourcePrefab: {fileID: 100100000, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
+--- !u!4 &691521018616529084 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1873722300314729536, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
+  m_PrefabInstance: {fileID: 7811482339906257788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &4399278397593304813 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
+  m_PrefabInstance: {fileID: 7811482339906257788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5235055441814051858 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6574882734343921810, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
   m_PrefabInstance: {fileID: 7811482339906257788}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6964425521930485293 stripped
@@ -883,6 +945,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterInstaller
   animator: {fileID: 4399278397593304813}
+  propBones: {fileID: 7633066418340680450}
   tr: {fileID: 7776956452113278103}
   col: {fileID: 461971800299368807}
   character: {fileID: 5699818905021155842}

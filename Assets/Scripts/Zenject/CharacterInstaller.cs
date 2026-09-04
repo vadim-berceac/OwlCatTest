@@ -4,6 +4,7 @@ using Zenject;
 public class CharacterInstaller : MonoInstaller
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private PropBones propBones;
     [SerializeField] private Transform tr;
     [SerializeField] private Collider col;
     [SerializeField] private Character character;
@@ -29,6 +30,10 @@ public class CharacterInstaller : MonoInstaller
         
         Container
             .BindInstance(col)
+            .AsSingle();
+        
+        Container
+            .BindInstance(propBones)
             .AsSingle();
         
         Container

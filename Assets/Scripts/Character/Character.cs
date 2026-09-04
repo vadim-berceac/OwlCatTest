@@ -23,12 +23,14 @@ public class Character : MonoBehaviour
     [Inject] private readonly CameraSystem _cameraSystem;
     [Inject] private readonly InteractableObject _interactableObject;
     [Inject] private readonly PlayableGraphHandle _graphHandle;
+    [Inject] private readonly PropBones _propBones;
 
     private Quaternion _targetRotation;
     private CancellationTokenSource _rotationCts;
     private float _lastRotationDirection;
     
     public event Action<float> OnRotationDirection;
+    public PropBones PropBones => _propBones;
     public bool IsInteracting { get; private set; }
     public bool IsOnLadder { get; private set; }
 
